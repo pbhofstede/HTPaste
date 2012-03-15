@@ -474,6 +474,8 @@ procedure TfrmHTPaste.FormCreate(Sender: TObject);
 var
   v1, v2, v3, v4: Word;
 begin
+  'git works'
+
   ReadIni;
   pcMain.ActivePage := tsDocs;
   edPostDatum.Date := Date;
