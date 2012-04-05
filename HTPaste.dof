@@ -60,7 +60,7 @@ IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=1
 MinorVer=7
-Release=0
+Release=1
 Build=0
 Debug=0
 PreRelease=0
@@ -72,22 +72,25 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Pays
 FileDescription=JOINT U17 HT-paste
-FileVersion=1.7.0.0
+FileVersion=1.7.1.0
 InternalName=JOINT U17 HT-paste
 LegalCopyright=JOINT U17 scouting
 LegalTrademarks=
 OriginalFilename=HTPaste.exe
 ProductName=JOINT U17 HT-paste
-ProductVersion=1.7
+ProductVersion=1.71
 Comments=
 [Excluded Packages]
 $(DELPHI)\Projects\Bpl\Scheduler_D5.bpl=Dream Scheduler Package
 D:\Components\PsFRExportFilters 1.24\Lib\D5\DCLPsFRED50.bpl=Pragnaan FastReport Export Filters
 [HistoryLists\hlConditionals]
-Count=3
+Count=6
 Item0=madExcept;NNPC;POLISADMINISTRATIE
-Item1=madExcept;NNPC;POLISENGINE
-Item2=SYN_DESIGN_PACKAGE
+Item1=madExcept;
+Item2=madExcept
+Item3=madExcept;SIS_RELEASE
+Item4=madExcept;ELBO;SIS_RELEASE
+Item5=madExcept;ELBO
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

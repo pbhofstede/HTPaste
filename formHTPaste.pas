@@ -482,7 +482,13 @@ begin
   CalculateNTPotential;
 
   GetBuildInfo(Application.ExeName, v1, v2, v3, v4);
-  Caption := Format('%s [versie %d.%d]', [Caption, v1, v2]);
+
+  Caption := Format('%s [versie %d.%d', [Caption, v1, v2]);
+  if (v3 > 0) then
+  begin
+    Caption := Format('%s%d', [Caption, v3]);
+  end;
+  Caption := Caption + ']';
 end;
 
 procedure TfrmHTPaste.edKeepenChange(Sender: TObject);
@@ -940,7 +946,8 @@ var
   vVLFloat,
   vPASFloat,
   vSCOFloat,
-  vSPFloat: double;
+  vSPFloat,
+  vIndex: double;
 begin
   vSL := uBibString.StringToStringlist(aLine, [#9]);
   try
@@ -992,7 +999,7 @@ begin
     vOpmerkingen := vSL[31];
 
 
-    CD_Index := CalculateTrainingWeeks(17,0,0,7,0,0,8,0,0,
+    CD_Index := CalculateTrainingWeeks(17,0,0,7,5,0,8,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
@@ -1000,7 +1007,7 @@ begin
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    OWB_Index := CalculateTrainingWeeks(17,0,0,7,0,7,6,0,0,
+    OWB_Index := CalculateTrainingWeeks(17,0,0,7,5,6,5,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
@@ -1008,20 +1015,28 @@ begin
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    Wing_Index := CalculateTrainingWeeks(17,0,0,0,7,7,6,0,0,
+    vIndex := CalculateTrainingWeeks(17,0,0,0,7,7,6,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
+
+    if (vDEFFloat >= 3) then
+    begin
+      Wing_Index := vIndex + ((vDEFFloat - 3) * 2);
+    end
+    else
+    begin
+      Wing_Index := vIndex + (vDEFFloat - 3);
+    end;
 
     SC_Index := CalculateTrainingWeeks(17,0,0,0,0,6,7,7,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    DFW_Index := CalculateTrainingWeeks(17,0,0,0,6,6,7,7,0,
+    DFW_Index := CalculateTrainingWeeks(17,0,0,0,6,5,7,7,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
     GetBestPositions(vBestPOS1, vBestPOS2, vBest1, vBest2);
-
 
     mmTo.Text := Format(cPOSTING, [
       vNaam,

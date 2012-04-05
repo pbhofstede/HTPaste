@@ -161,7 +161,7 @@ object frmHTPaste: TfrmHTPaste
     Top = 0
     Width = 603
     Height = 245
-    ActivePage = tbMasterfulIndex
+    ActivePage = tsU17talent
     Align = alTop
     HideButtons = False
     HotTrack = False
