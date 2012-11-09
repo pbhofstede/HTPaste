@@ -4,7 +4,7 @@ uses
   Forms,
   formHTPaste in 'formHTPaste.pas' {frmHTPaste},
   uHTTraining in 'uHTTraining.pas',
-  uHattrick in '..\Hattrick Scanner\uHattrick.pas';
+  uHattrick in 'uHattrick.pas';
 
 {$R *.RES}
 

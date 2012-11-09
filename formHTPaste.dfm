@@ -1,9 +1,9 @@
 object frmHTPaste: TfrmHTPaste
   Left = 490
   Top = 295
-  Width = 619
-  Height = 428
   Caption = 'JOINT U17 HT-paste'
+  ClientHeight = 390
+  ClientWidth = 603
   Color = clBtnFace
   Constraints.MinHeight = 300
   Constraints.MinWidth = 500
@@ -156,25 +156,19 @@ object frmHTPaste: TfrmHTPaste
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object pcMain: TdxPageControl
+  object pcMain: TcxPageControl
     Left = 0
     Top = 0
     Width = 603
     Height = 245
-    ActivePage = tsU17talent
     Align = alTop
-    HideButtons = False
-    HotTrack = False
-    MultiLine = False
-    OwnerDraw = False
-    RaggedRight = False
-    ScrollOpposite = False
-    TabHeight = 0
     TabOrder = 0
-    TabPosition = dxtpTop
-    TabStop = True
-    TabWidth = 0
-    object tsDocs: TdxTabSheet
+    Properties.ActivePage = tsDocs
+    ClientRectBottom = 241
+    ClientRectLeft = 4
+    ClientRectRight = 599
+    ClientRectTop = 24
+    object tsDocs: TcxTabSheet
       Caption = 'U17 docs'
       object Label1: TLabel
         Left = 185
@@ -196,7 +190,7 @@ object frmHTPaste: TfrmHTPaste
       object mmU17From: TMemo
         Left = 0
         Top = 0
-        Width = 603
+        Width = 595
         Height = 145
         Align = alTop
         TabOrder = 1
@@ -215,12 +209,16 @@ object frmHTPaste: TfrmHTPaste
         Width = 213
       end
     end
-    object tsU17talent: TdxTabSheet
+    object tsU17talent: TcxTabSheet
       Caption = 'U17 talent'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object mmU17talent: TMemo
         Left = 0
         Top = 0
-        Width = 603
+        Width = 595
         Height = 145
         Align = alTop
         TabOrder = 0
@@ -236,8 +234,12 @@ object frmHTPaste: TfrmHTPaste
         OnClick = btnU17talentClick
       end
     end
-    object tsLink: TdxTabSheet
+    object tsLink: TcxTabSheet
       Caption = 'Link generator'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object btnLink: TButton
         Left = 8
         Top = 152
@@ -251,14 +253,18 @@ object frmHTPaste: TfrmHTPaste
       object mmLink: TMemo
         Left = 0
         Top = 0
-        Width = 603
+        Width = 595
         Height = 145
         Align = alTop
         TabOrder = 1
       end
     end
-    object tbMasterfulIndex: TdxTabSheet
+    object tbMasterfulIndex: TcxTabSheet
       Caption = 'Masterful Index'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gbVaardigheden: TGroupBox
         Left = 8
         Top = 8
@@ -325,9 +331,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edVerdedigen: TdxCurrencyEdit
@@ -340,9 +346,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edPositiespel: TdxCurrencyEdit
@@ -355,9 +361,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edVleugelspel: TdxCurrencyEdit
@@ -370,9 +376,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edPassen: TdxCurrencyEdit
@@ -385,9 +391,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edScoren: TdxCurrencyEdit
@@ -400,9 +406,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object edSpelhervatten: TdxCurrencyEdit
@@ -415,9 +421,9 @@ object frmHTPaste: TfrmHTPaste
           Alignment = taRightJustify
           OnChange = edKeepenChange
           DisplayFormat = '0.00'
-          MaxValue = 8.01
-          MinValue = 1
-          Value = 1
+          MaxValue = 8.010000000000000000
+          MinValue = 1.000000000000000000
+          Value = 1.000000000000000000
           StoredValues = 49
         end
         object cbU20: TcxCheckBox
@@ -724,13 +730,17 @@ object frmHTPaste: TfrmHTPaste
         end
       end
     end
-    object tsNTTalent: TdxTabSheet
+    object tsNTTalent: TcxTabSheet
       Caption = 'NT talent'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 0
         Width = 185
-        Height = 201
+        Height = 217
         Align = alLeft
         Caption = 'Panel1'
         TabOrder = 0
@@ -756,8 +766,8 @@ object frmHTPaste: TfrmHTPaste
       object dxDBGrid1: TdxDBGrid
         Left = 185
         Top = 0
-        Width = 418
-        Height = 201
+        Width = 410
+        Height = 217
         Bands = <
           item
           end>
@@ -874,7 +884,7 @@ object frmHTPaste: TfrmHTPaste
     Left = 160
     Top = 240
     Bitmap = {
-      494C010103000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030004000C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

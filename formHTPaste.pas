@@ -1,20 +1,21 @@
-unit formHTPaste;
+ï»¿unit formHTPaste;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ActnList, dxPageControl, cxCalendar, cxCheckBox, cxControls, cxContainer, cxEdit, cxTextEdit,
+  StdCtrls, ActnList, cxCalendar, cxCheckBox, cxControls, cxContainer, cxEdit, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, dxCntner, dxEditor, dxExEdtr, dxEdLib,
-  ImgList, ExtCtrls, Db, dxmdaset, dxTL, dxDBCtrl, dxDBGrid;
+  ImgList, ExtCtrls, Db, dxmdaset, dxTL, dxDBCtrl, dxDBGrid, cxPCdxBarPopupMenu,
+  cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, cxPC;
 
 type
   TfrmHTPaste = class(TForm)
     ActionList1: TActionList;
     actPaste: TAction;
-    pcMain: TdxPageControl;
-    tsDocs: TdxTabSheet;
-    tsLink: TdxTabSheet;
+    pcMain: TcxPageControl;
+    tsDocs: TcxTabSheet;
+    tsLink: TcxTabSheet;
     Label1: TLabel;
     btnConvert: TButton;
     mmU17From: TMemo;
@@ -23,7 +24,7 @@ type
     mmLink: TMemo;
     edPostDatum: TcxDateEdit;
     cbSpelersnaam: TcxCheckBox;
-    tbMasterfulIndex: TdxTabSheet;
+    tbMasterfulIndex: TcxTabSheet;
     gbVaardigheden: TGroupBox;
     Keepen: TLabel;
     Label2: TLabel;
@@ -57,10 +58,10 @@ type
     Label14: TLabel;
     imgTDFW: TImage;
     Label15: TLabel;
-    tsU17talent: TdxTabSheet;
+    tsU17talent: TcxTabSheet;
     mmU17talent: TMemo;
     btnU17talent: TButton;
-    tsNTTalent: TdxTabSheet;
+    tsNTTalent: TcxTabSheet;
     Panel1: TPanel;
     mmNTTalent: TMemo;
     btnNTTalent: TButton;
@@ -172,7 +173,7 @@ var
 
 implementation
 uses
-  uBibString, Math, Clipbrd, uBibMath, uBibConv, uHTTraining, uHattrick, inifiles;
+  Math, Clipbrd, uHTTraining, uHattrick, inifiles, uHTMisc;
 
 {$R *.DFM}
 
@@ -227,8 +228,7 @@ const
             #9 + '=INDIRECT("AI" & ROW()) - INDIRECT("AG" & ROW())' +
             #9 + '=INDIRECT("AI" & ROW()) - INDIRECT("AH" & ROW())';
 var
-  vPos,
-  vPos2: integer;
+  vPos:integer;
   vTemp,
   vSpelerID,
   vTeamID,
@@ -238,90 +238,50 @@ var
   vSpec: String;
   vGebDatum: TDate;
 begin
+  //'(128438012)'#9'Gideon Milde'#9'(1282334)'#9'16y20d'9##9#9'7'#9'-19'
   vPos := Pos('(', aLine);
 
   if (vPos > 0) and
-     (uBibString.StringContainingNumber(aLine)) then
+     (StringContainingNumber(aLine)) then
   begin
+    // PLAYERID
     vTemp := Copy(aLine, vPos + 1, Length(aLine));
     vPos := Pos(')', vTemp);
     vTemp := Copy(vTemp, 1, vPos - 1);
-
     vSpelerID := vTemp;
 
-    vTemp := Copy(aLine, vPos, Length(aLine));
-    vPos := Pos(')_', vTemp);
-    vTemp := Copy(vTemp, vPos + 2, Length(aLine));
+    vPos := Pos(#9, aLine);
+    aLine := Copy(aLine, vPos+1, Length(aLine));
+    vPos := Pos(#9, aLine);
+    vTemp := Copy(aLine,1,vPos-1);
+    Splitsen(vTemp, ' ', vVoornaam, vAchternaam);
 
-    while (uBibString.StartsWith(vTemp, '_')) do
-    begin
-      vTemp := Copy(vTemp, 2, Length(vTemp));
-    end;
-
-    aLine := Copy(aLine, Pos(vTemp, aLine), Length(aLine));
-    vPos := Pos('_', aLine);
-    vPos2 := Pos('‚', aLine);
-    if (vPos2 > 0) and
-       (vPos2 < vPos) then
-    begin
-      vPos := vPos2;
-    end;
-    aLine := Copy(aLine, vPos, Length(aLine));
-    vTemp := Copy(vTemp, 1, vPos - 1);
-    uBibString.Splitsen(vTemp, ' ', vVoornaam, vAchternaam);
-
-
+    aLine := Copy(aLine,vPos+1,Length(aLine));
     vPos := Pos('(', aLine);
-    vTemp := Copy(aLine, vPos + 1, Length(aLine));
+    vTemp := Copy(aLine,vPos+1,Length(aLine));
     vPos := Pos(')', vTemp);
     vTemp := Copy(vTemp, 1, vPos - 1);
     vTeamID := vTemp;
 
-    aLine := Copy(aLine, Pos(vTemp, aLine), Length(aLine));
-    vPos := Pos('_', aLine);
-    vPos2 := Pos('‚', aLine);
-    if (vPos2 > 0) and
-       (vPos2 < vPos) then
-    begin
-      vPos := vPos2;
-    end;
-    aLine := Copy(aLine, vPos, Length(aLine));
-
-
-    vPos := Pos('1', aLine);
-    vTemp := Copy(aLine, vPos, Pos('d', aLine) - vPos);
-
+    vPos := Pos(#9, aLine);
+    aLine := Copy(aLine,vPos+1,Length(aLine));
+    vPos := Pos(#9, aLine);
+    vTemp := Copy(aLine, 1, vPos -2);
     vGebDatum := GebDatum(vTemp, Ceil(Date - edPostDatum.Date));
 
-    aLine := Copy(aLine, Pos('d', aLine), Length(aLine));
-    if Pos('Q', aLine) > 0 then
+    vPos := Pos(#9, aLine);
+    aLine := Copy(aLine, vPos+1, Length(aLine));
+
+    vPos := Pos(#9, aLine);
+    if (vPos > 1) then
     begin
-      vSpec := 'Q';
-    end
-    else if Pos('H', aLine) > 0 then
-    begin
-      vSpec := 'H';
-    end
-    else if Pos('P', aLine) > 0 then
-    begin
-      vSpec := 'P';
-    end
-    else if Pos('U', aLine) > 0 then
-    begin
-      vSpec := 'U';
-    end
-    else if Pos('T', aLine) > 0 then
-    begin
-      vSpec := 'T';
-    end
-    else if Pos('N', aLine) > 0 then
-    begin
-      vSpec := 'N';
+       vTemp := Copy(aLine, 1, vPos -1);
+       vSpec := vTemp;
     end
     else
-    begin
       vSpec := '';
-    end;
+
+    aLine := Copy(alIne, vPos+1, Length(aLine));
 
     if Pos('[C]', aLine) > 0 then
     begin
@@ -366,7 +326,7 @@ begin
 
       for vCount := 0 to vTekst.Count -1 do
       begin
-        if uBibString.StartsWith(vTekst[vCount], '_') then
+        if StartsWith(vTekst[vCount], '_') then
         begin
           if (vFoutieveLastLine) then
           begin
@@ -429,9 +389,9 @@ begin
   if (aText <> '') then
   begin
     try          
-      vID := uBibConv.AnyStrToInt(aText);
+      vID := AnyStrToInt(aText);
     except
-      vID := uBibConv.AnyStrToInt(Copy(aText, 1, Pos(' ', aText)));
+      vID := AnyStrToInt(Copy(aText, 1, Pos(' ', aText)));
     end;
 
     if vID > 0 then
@@ -482,13 +442,7 @@ begin
   CalculateNTPotential;
 
   GetBuildInfo(Application.ExeName, v1, v2, v3, v4);
-
-  Caption := Format('%s [versie %d.%d', [Caption, v1, v2]);
-  if (v3 > 0) then
-  begin
-    Caption := Format('%s%d', [Caption, v3]);
-  end;
-  Caption := Caption + ']';
+  Caption := Format('%s [versie %d.%d]', [Caption, v1, v2]);
 end;
 
 procedure TfrmHTPaste.edKeepenChange(Sender: TObject);
@@ -710,7 +664,7 @@ begin
   - Alle veldspelers krijgen een salariskorting: hoe hoger de vaardigheid, des te groter de korting.
   Een goddelijke veldspeler met monoskills krijgt bijvoorbeeld een salaris dat 30 procent lager ligt,
   bij een reusachtige veldspeler is dat 15 procent, bij een briljante veldspeler 10 procent en bij een uitstekende veldspeler 5 procent.
-  De vaardigheid ‘Passen’ leidt tot een lagere korting dan andere vaardigheden (maar zal veel profiteren van de korting
+  De vaardigheid â€˜Passenâ€™ leidt tot een lagere korting dan andere vaardigheden (maar zal veel profiteren van de korting
   op secundaire vaardigheden).}
 
   //8=5 9=6 10=8 11=10 12=11 13=12 14=14 15=15 16=17 17=19 18=22 19=25 20=30
@@ -946,19 +900,18 @@ var
   vVLFloat,
   vPASFloat,
   vSCOFloat,
-  vSPFloat,
-  vIndex: double;
+  vSPFloat: double;
 begin
-  vSL := uBibString.StringToStringlist(aLine, [#9]);
+  vSL := StringToStringlist(aLine, [#9]);
   try
     vNaam := Format('%s %s', [vSL[0], vSL[1]]);
     vSpelerID := vSL[2];
     vLaatsteUpdate := vSL[5];
     vGebDatumStr := vSL[9];
-    vGebDatum := uBibConv.AnyStrToDate(vGebDatumStr);
+    vGebDatum := AnyStrToDate(vGebDatumStr);
     vJarigStr := FormatDateTime('dddd dd-mm-yyyy', vGebDatum + (2 * 112));
 
-    vSpec := uHattrick.FormatSpecialiteit(vSL[14]);
+    vSpec := FormatSpecialiteit(vSL[14]);
     if (vSpec = '') then
     begin
       vSpec := vSL[14];
@@ -999,7 +952,7 @@ begin
     vOpmerkingen := vSL[31];
 
 
-    CD_Index := CalculateTrainingWeeks(17,0,0,7,5,0,8,0,0,
+    CD_Index := CalculateTrainingWeeks(17,0,0,7,0,0,8,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
@@ -1007,7 +960,7 @@ begin
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    OWB_Index := CalculateTrainingWeeks(17,0,0,7,5,6,5,0,0,
+    OWB_Index := CalculateTrainingWeeks(17,0,0,7,0,7,6,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
@@ -1015,28 +968,20 @@ begin
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    vIndex := CalculateTrainingWeeks(17,0,0,0,7,7,6,0,0,
+    Wing_Index := CalculateTrainingWeeks(17,0,0,0,7,7,6,0,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
-
-    if (vDEFFloat >= 3) then
-    begin
-      Wing_Index := vIndex + ((vDEFFloat - 3) * 2);
-    end
-    else
-    begin
-      Wing_Index := vIndex + (vDEFFloat - 3);
-    end;
 
     SC_Index := CalculateTrainingWeeks(17,0,0,0,0,6,7,7,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
-    DFW_Index := CalculateTrainingWeeks(17,0,0,0,6,5,7,7,0,
+    DFW_Index := CalculateTrainingWeeks(17,0,0,0,6,6,7,7,0,
       0,vDEFFloat,vPMFloat,vVLFloat,
       vPASFloat,vSCOFloat,vSPFloat);
 
     GetBestPositions(vBestPOS1, vBestPOS2, vBest1, vBest2);
+
 
     mmTo.Text := Format(cPOSTING, [
       vNaam,
@@ -1091,7 +1036,7 @@ begin
   end
   else
   begin
-    Result := uBibConv.AnyStrToFloat(Trim(aWaarde));
+    Result := AnyStrToFloat(Trim(aWaarde));
 
     if (aPrevWaarde > Result) then
     begin
@@ -1195,11 +1140,11 @@ begin
 
   if (vPos1 >= 0) then
   begin
-    vBest1 := '+'+FloatToStr(uBibMath.RoundTo(vPos1, 1));
+    vBest1 := '+'+FloatToStr(RoundTo(vPos1, -1));
   end
   else if (vPos1 > -1) then
   begin
-    vBest1 := FloatToStr(uBibMath.RoundTo(vPos1, 1));
+    vBest1 := FloatToStr(RoundTo(vPos1, -1));
   end
   else
   begin
@@ -1209,11 +1154,11 @@ begin
 
   if (vPos2 > 0) then
   begin
-    vBest2 := '+'+FloatToStr(uBibMath.RoundTo(vPos2, 1));
+    vBest2 := '+'+FloatToStr(RoundTo(vPos2, -1));
   end  
   else if (vPos2 > -1) then
   begin
-    vBest2 := FloatToStr(uBibMath.RoundTo(vPos2, 1));
+    vBest2 := FloatToStr(RoundTo(vPos2, -1));
   end
   else
   begin
@@ -1250,20 +1195,20 @@ var
   vExtraTraining: integer;
   vTraining: double;
 begin
-  vSLSpelers := uBibString.StringToStringlist(aText, [#13]);
+  vSLSpelers := StringToStringlist(aText, [#13]);
 
   try
     for vCount := 0 to vSLSpelers.Count -1 do
     begin
-      vSLSpeler := uBibString.StringToStringlist(vSLSpelers[vCount], [#9]);
+      vSLSpeler := StringToStringlist(vSLSpelers[vCount], [#9]);
       try
         vExtraTraining := 0;
         
         memNTTalent.Append;
         memNTTalent.FieldByName('NAAM').AsString := vSLSpeler[0];
         memNTTalent.FieldByName('SPELERID').AsString := vSLSpeler[1];
-        memNTTalent.FieldByName('NU_JAREN').AsInteger := uBibConv.AnyStrToInt(vSLSpeler[2]);
-        memNTTalent.FieldByName('NU_DAGEN').AsInteger := uBibConv.AnyStrToInt(vSLSpeler[3]);
+        memNTTalent.FieldByName('NU_JAREN').AsInteger := AnyStrToInt(vSLSpeler[2]);
+        memNTTalent.FieldByName('NU_DAGEN').AsInteger := AnyStrToInt(vSLSpeler[3]);
         GetTraining(vSLSpeler[5], vTraining, vExtraTraining);
         memNTTalent.FieldByName('PM').AsFloat := vTraining;
         GetTraining(vSLSpeler[7], vTraining, vExtraTraining);
@@ -1283,7 +1228,7 @@ begin
         end;
         memNTTalent.FieldByName('WEKEN_OUD').AsInteger := ((memNTTalent.FieldByName('NU_JAREN').AsInteger - 17) * 16) +
                                                           Ceil(memNTTalent.FieldByName('NU_DAGEN').AsInteger / 7);
-        memNTTalent.FieldByName('WEKEN_TRAINING').AsFloat := vExtraTraining + uBibMath.RoundTo(CalculateTrainingWeeks(17, 0,
+        memNTTalent.FieldByName('WEKEN_TRAINING').AsFloat := vExtraTraining + RoundTo(CalculateTrainingWeeks(17, 0,
           0,7,7,0,5,0,0,
           0,memNTTalent.FieldByName('DEF').AsFloat,memNTTalent.FieldByName('PM').AsFloat,0,memNTTalent.FieldByName('PAS').AsFloat,0,0), 2);
 
@@ -1304,11 +1249,11 @@ begin
           memNTTalent.FieldByName('KWALITEIT').AsFloat := memNTTalent.FieldByName('WEKEN_TRAINING').AsFloat - 20;
         end;
 
-        memNTTalent.FieldByName('TRAINING_INDEX').AsFloat := uBibMath.RoundTo(
-          memNTTalent.FieldByName('WEKEN_TRAINING').AsFloat / memNTTalent.FieldByName('WEKEN_OUD').AsInteger * 100, 2);
-        
-        memNTTalent.FieldByName('KWALITEIT_INDEX').AsFloat := uBibMath.RoundTo(
-          memNTTalent.FieldByName('KWALITEIT').AsFloat / memNTTalent.FieldByName('WEKEN_OUD').AsInteger * 100, 2);
+        memNTTalent.FieldByName('TRAINING_INDEX').AsFloat := RoundTo(
+          memNTTalent.FieldByName('WEKEN_TRAINING').AsFloat / memNTTalent.FieldByName('WEKEN_OUD').AsInteger * 100, -2);
+
+        memNTTalent.FieldByName('KWALITEIT_INDEX').AsFloat := RoundTo(
+          memNTTalent.FieldByName('KWALITEIT').AsFloat / memNTTalent.FieldByName('WEKEN_OUD').AsInteger * 100, -2);
 
         memNTTalent.Post;
       finally
@@ -1364,31 +1309,31 @@ begin
   vPos := Pos('-', aGetal);
   if (vPos > 0) then
   begin
-    aExtraTraining := aExtraTraining - uBibConv.AnyStrToInt(Copy(aGetal, vPos + 1, Length(aGetal)));
+    aExtraTraining := aExtraTraining - AnyStrToInt(Copy(aGetal, vPos + 1, Length(aGetal)));
 
     aGetal := Copy(aGetal, 1, vPos - 1);
-    aTraining := uBibConv.AnyStrToInt(aGetal);
+    aTraining := AnyStrToInt(aGetal);
   end
   else
   begin
-    aTraining := uBibConv.AnyStrToInt(aGetal);
+    aTraining := AnyStrToInt(aGetal);
 
     vPos := Pos('.', aGetal);
     if (vPos > 0) then
     begin
-      aTraining := uBibConv.AnyStrToFloat(aGetal);
+      aTraining := AnyStrToFloat(aGetal);
     end;
 
     vPos := Pos(',', aGetal);
     if (vPos > 0) then
     begin
-      aTraining := uBibConv.AnyStrToFloat(aGetal);
+      aTraining := AnyStrToFloat(aGetal);
     end;
 
     vPos := Pos('+', aGetal);
     if (vPos > 0) then
     begin
-      aExtraTraining := aExtraTraining + uBibConv.AnyStrToInt(Copy(aGetal, vPos + 1, Length(aGetal)));
+      aExtraTraining := aExtraTraining + AnyStrToInt(Copy(aGetal, vPos + 1, Length(aGetal)));
     end;
   end;
 end;
@@ -1471,7 +1416,7 @@ begin
   with TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini')) do
   begin
     try
-      WriteInteger('ALGEMEEN','U20', uBibConv.BoolToInt(cbU20.Checked));
+      WriteInteger('ALGEMEEN','U20', Ord(cbU20.Checked)*-1);
     finally
       Free;
     end;
